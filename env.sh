@@ -1,0 +1,1 @@
+export SCPATH=/home/jgoeders/ecen522r_asic_cad/third_party/siliconcompiler/siliconcompiler

@@ -7,3 +7,7 @@ swig
 boost
 spdlog
 lemon
+
+conda install -c omnia eigen3
+
+or-tools add to PATH

@@ -3,3 +3,4 @@ channel conda-forge
 pkg-config
 libffi
 bison
+swig

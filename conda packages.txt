@@ -4,3 +4,4 @@ pkg-config
 libffi
 bison
 swig
+boost

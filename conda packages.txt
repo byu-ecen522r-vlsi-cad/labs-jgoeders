@@ -5,3 +5,4 @@ libffi
 bison
 swig
 boost
+spdlog

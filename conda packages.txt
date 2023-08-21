@@ -11,3 +11,5 @@ lemon
 conda install -c omnia eigen3
 
 or-tools add to PATH
+
+conda install -c pavoljuhas boost-serialization

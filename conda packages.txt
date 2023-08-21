@@ -6,3 +6,4 @@ bison
 swig
 boost
 spdlog
+lemon

@@ -2,14 +2,8 @@ channel conda-forge
   
 pkg-config
 libffi
+flex
 bison
-swig
-boost
-spdlog
-lemon
 
-conda install -c omnia eigen3
+source ~/.local/env.sh
 
-or-tools add to PATH
-
-conda install -c pavoljuhas boost-serialization

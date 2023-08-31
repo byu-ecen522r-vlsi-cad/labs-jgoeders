@@ -1,9 +1,0 @@
-channel conda-forge
-  
-pkg-config
-libffi
-flex
-bison
-
-source ~/.local/env.sh
-

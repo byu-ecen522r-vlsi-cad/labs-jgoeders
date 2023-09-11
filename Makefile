@@ -11,7 +11,7 @@ openroad-deps:
 
 openroad-flow-deps:	
 # source ${HOME}/.local/env.sh before running this
-	. ${HOME}/.local/env.sh && third_party/OpenROAD-flow-scripts/etc/DependencyInstaller.sh -local -common
+	third_party/OpenROAD-flow-scripts/etc/DependencyInstaller.sh -local -common
 
 openroad-build:
 # source third_party/OpenROAD-flow-scripts/env.sh before running this

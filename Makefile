@@ -1,7 +1,7 @@
-# IN_ENV = conda activate openroad &&	
 
 create-conda-env:
 	conda env create -f environment.yml
+# after creating environment, run: conda activate openroad
 
 openroad-deps:
 	cd third_party/OpenROAD-flow-scripts && git submodule init
@@ -10,7 +10,9 @@ openroad-deps:
 	third_party/OpenROAD-flow-scripts/tools/OpenROAD/etc/DependencyInstaller.sh -local -common
 
 openroad-flow-deps:	
+# source ${HOME}/.local/env.sh before running this
 	. ${HOME}/.local/env.sh && third_party/OpenROAD-flow-scripts/etc/DependencyInstaller.sh -local -common
 
 openroad-build:
-	. ${HOME}/.local/env.sh && third_party/OpenROAD-flow-scripts/build_openroad.sh --local
+# source third_party/OpenROAD-flow-scripts/env.sh before running this
+	third_party/OpenROAD-flow-scripts/build_openroad.sh --local

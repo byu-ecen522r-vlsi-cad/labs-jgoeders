@@ -1,4 +1,8 @@
 
+init:
+	git submodule init
+	git submodule update
+
 create-conda-env:
 	conda env create -f environment.yml
 # after creating environment, run: conda activate openroad

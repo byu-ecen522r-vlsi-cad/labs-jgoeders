@@ -59,3 +59,11 @@ global_placement -skip_io -routability_driven -density 0.5
 
 write_db aes.db
 }
+
+place_pins -hor_layers $io_placer_hor_layer -ver_layers $io_placer_ver_layer
+global_placement -skip_io -routability_driven -density 0.5
+
+# Buffer resizing
+estimate_parasitics -placement
+report_metrics "resizer pre" false false
+buffer_ports

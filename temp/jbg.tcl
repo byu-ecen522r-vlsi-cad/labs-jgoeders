@@ -43,8 +43,6 @@ place_pins -random -hor_layers $io_placer_hor_layer -ver_layers $io_placer_ver_l
 source ../third_party/OpenROAD-flow-scripts/tools/OpenROAD/test/sky130hd/sky130hd.pdn.tcl/
 pdngen
 
-write_db aes.db
-}
 
 
 # set global_routing_layer_adjustments {{met1 0.5} {met2 0.5} {met3 0.5} {met4 0.5} {met5 0.5}}
@@ -56,5 +54,8 @@ write_db aes.db
 set_routing_layers -signal met1-met5 -clock met3-met5
 # set_macro_extension 2
 
-global_placement -routability_driven -density 0.5
-gui::show
+global_placement -skip_io -routability_driven -density 0.5
+# gui::show
+
+write_db aes.db
+}

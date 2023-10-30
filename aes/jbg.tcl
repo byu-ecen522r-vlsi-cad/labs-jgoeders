@@ -86,4 +86,5 @@ repair_tie_fanout $tielib/$tie/$lo
 write_db aes.db
 
 }
+detailed_placement
 exit

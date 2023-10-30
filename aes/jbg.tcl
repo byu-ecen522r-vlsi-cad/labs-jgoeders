@@ -5,15 +5,20 @@ set io_placer_ver_layer met2
 
 set db_file aes.db
 
+
 if { [file exists $db_file] == 1} {   
     read_db $db_file
+    read_liberty ../third_party/OpenROAD-flow-scripts/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+    read_sdc gcd.sdc
+
 } else {
 
-# Read in library files
-read_lef ../third_party/OpenROAD-flow-scripts/flow/platforms/sky130hd/lef/sky130_fd_sc_hd.tlef
-read_lef ../third_party/OpenROAD-flow-scripts/flow/platforms/sky130hd/lef/sky130io_fill.lef
-read_lef ../third_party/OpenROAD-flow-scripts/flow/platforms/sky130hd/lef/sky130_fd_sc_hd_merged.lef
-read_liberty ../third_party/OpenROAD-flow-scripts/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+    # Read in library files
+    read_lef ../third_party/OpenROAD-flow-scripts/flow/platforms/sky130hd/lef/sky130_fd_sc_hd.tlef
+    read_lef ../third_party/OpenROAD-flow-scripts/flow/platforms/sky130hd/lef/sky130io_fill.lef
+    read_lef ../third_party/OpenROAD-flow-scripts/flow/platforms/sky130hd/lef/sky130_fd_sc_hd_merged.lef
+    read_liberty ../third_party/OpenROAD-flow-scripts/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+    read_sdc gcd.sdc
 
 # Read in design
 # read_verilog aes_synth.v
@@ -83,8 +88,16 @@ set tielib [get_name [get_property [lindex [get_lib_cell $tie] 0] library]]
 repair_tie_fanout $tielib/$tie/$hi
 repair_tie_fanout $tielib/$tie/$lo 
 
-write_db aes.db
-
-}
+# Detailed placement
 detailed_placement
+check_placement
+optimize_mirroring
+write_db aes.db
+}
+
+# Clock tree synthesis
+repair_clock_inverters
+
+clock_tree_synthesis -root_buf sky130_fd_sc_hd__clkbuf_4 -buf_list sky130_fd_sc_hd__clkbuf_4 -sink_clustering_enable -sink_clustering_size 30 -sink_clustering_max_diameter 100 -balance_levels 
+
 exit

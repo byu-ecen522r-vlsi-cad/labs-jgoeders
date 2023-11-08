@@ -34,8 +34,8 @@ read_verilog gcd.v
 link_design gcd
 read_sdc gcd.sdc
 
-set density 63
-set placement_density 0.76
+set density 66
+set placement_density 0.75
 
 remove_buffers
 
@@ -125,13 +125,22 @@ set_propagated_clock [all_clocks]
 filler_placement "sky130_fd_sc_hd__fill_1 sky130_fd_sc_hd__fill_2 sky130_fd_sc_hd__fill_4 sky130_fd_sc_hd__fill_8"
 check_placement -verbose
 
+# Global routing
+global_route -congestion_report_file congestion.rpt -congestion_iterations 20 -congestion_report_iter_step 5 -verbose
+
+set_propagated_clock [all_clocks]
+estimate_parasitics -global_routing
+repair_timing -recover_power 100
+check_antennas -report_file antenna.log -report_violating_nets
+
+
 write_db aes.db
 
 }
 
+# Detailed routing
 
 
 
-
-# gui::show
+gui::show
 exit

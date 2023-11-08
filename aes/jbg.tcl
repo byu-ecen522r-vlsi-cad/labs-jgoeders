@@ -5,6 +5,8 @@ set io_placer_ver_layer met2
 
 set db_file aes.db
 
+source ../third_party/OpenROAD-flow-scripts/flow/scripts/report_metrics.tcl
+
 
 if { [file exists $db_file] == 1} {   
     read_db $db_file
@@ -18,7 +20,8 @@ if { [file exists $db_file] == 1} {
     read_lef ../third_party/OpenROAD-flow-scripts/flow/platforms/sky130hd/lef/sky130io_fill.lef
     read_lef ../third_party/OpenROAD-flow-scripts/flow/platforms/sky130hd/lef/sky130_fd_sc_hd_merged.lef
     read_liberty ../third_party/OpenROAD-flow-scripts/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
-    read_sdc gcd.sdc
+    
+
 
 # Read in design
 # read_verilog aes_synth.v
@@ -29,8 +32,10 @@ if { [file exists $db_file] == 1} {
 
 read_verilog gcd.v
 link_design gcd
+read_sdc gcd.sdc
 
-set density 1
+set density 63
+set placement_density 0.76
 
 remove_buffers
 
@@ -62,13 +67,13 @@ pdngen
 # Global placement (skipping I/Os)
 set_routing_layers -signal met1-met5 -clock met3-met5
 set_macro_extension 2
-global_placement -skip_io -routability_driven -density 0.3 
+global_placement -skip_io -routability_driven -density $placement_density
 
 # I/O Placement
 place_pins -hor_layers $io_placer_hor_layer -ver_layers $io_placer_ver_layer
 
 # Re-run global placement
-global_placement -routability_driven -density 0.3
+global_placement -routability_driven -density $placement_density
 
 
 
@@ -92,12 +97,41 @@ repair_tie_fanout $tielib/$tie/$lo
 detailed_placement
 check_placement
 optimize_mirroring
-write_db aes.db
-}
 
 # Clock tree synthesis
 repair_clock_inverters
 
 clock_tree_synthesis -root_buf sky130_fd_sc_hd__clkbuf_4 -buf_list sky130_fd_sc_hd__clkbuf_4 -sink_clustering_enable -sink_clustering_size 30 -sink_clustering_max_diameter 100 -balance_levels 
 
+set_propagated_clock [all_clocks]
+
+# # Optimize timing
+estimate_parasitics -placement
+report_metrics "cts pre-repair"
+repair_clock_nets
+
+set_placement_padding -global -left 0 -right 0
+detailed_placement
+
+repair_timing 
+detailed_placement
+
+check_placement -verbose
+
+report_metrics "cts final"
+
+# Fill cells
+set_propagated_clock [all_clocks]
+filler_placement "sky130_fd_sc_hd__fill_1 sky130_fd_sc_hd__fill_2 sky130_fd_sc_hd__fill_4 sky130_fd_sc_hd__fill_8"
+check_placement -verbose
+
+write_db aes.db
+
+}
+
+
+
+
+
+# gui::show
 exit
